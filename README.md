@@ -12,4 +12,5 @@ Optionally input PWM from receiver to ch4 to keep the beacon deactivated unless 
 
 Supported hardware:
   OrangeRX UHF RX http://www.hobbyking.com/hobbyking/store/__27096__OrangeRx_Open_LRS_433MHz_9Ch_Receiver.html
+  
   Flytron openLRS RX v2 http://www.flytron.com/openlrs/146-openlrs-receiver-v2.html
