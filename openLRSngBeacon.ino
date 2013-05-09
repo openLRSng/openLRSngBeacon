@@ -288,7 +288,7 @@ volatile uint16_t startPulse = 0;
  ****************************************************/
 ISR(TIMER1_CAPT_vect)
 {
-  if (digitalRead(PPM_IN)) {
+  if (TCCR1B & (1 << ICES1)) {
     startPulse = ICR1;
   } else {
     uint16_t pulseWidth = ICR1 - startPulse;
@@ -296,6 +296,7 @@ ISR(TIMER1_CAPT_vect)
       beaconDelay = BEACON_DEADTIME;
     }
   }
+  TCCR1B ^= (1 << ICES1); // change trigger edge
 }
 
 void setupPPMinput()
