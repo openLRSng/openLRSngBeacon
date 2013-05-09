@@ -264,7 +264,7 @@ volatile uint16_t startPulse = 0;
  ****************************************************/
 ISR(TIMER1_CAPT_vect)
 {
-  if (digitalRead(PPM_IN) {
+  if (digitalRead(PPM_IN)) {
     startPulse = ICR1;
   } else {
     uint16_t pulseWidth = ICR1 - startPulse;
