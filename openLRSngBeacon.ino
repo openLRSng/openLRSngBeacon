@@ -20,6 +20,9 @@
 #define BEACON_DEADTIME 30 // time to wait until go into beacon mode (s)
 #define BEACON_INTERVAL 10 // interval between beacon transmits (s)
 
+#define MINPWM 1000
+#define MAXPWM 1500
+
 //####################
 //### CODE SECTION ###
 //####################
@@ -185,6 +188,23 @@ void spiWriteRegister(uint8_t address, uint8_t data)
   nSEL_on;
 }
 
+void rfmSetCarrierFrequency(uint32_t f)
+{
+  uint16_t fb, fc, hbsel;
+  if (f < 480000000) {
+    hbsel = 0;
+    fb = f / 10000000 - 24;
+    fc = (f - (fb + 24) * 10000000) * 4 / 625;
+  } else {
+    hbsel = 1;
+    fb = f / 20000000 - 24;
+    fc = (f - (fb + 24) * 20000000) * 2 / 625;
+  }
+  spiWriteRegister(0x75, 0x40 + (hbsel?0x20:0) + (fb & 0x1f));
+  spiWriteRegister(0x76, (fc >> 8));
+  spiWriteRegister(0x77, (fc & 0xff));
+}
+
 void beacon_tone(int16_t hz, int16_t len)
 {
   int16_t d = 500 / hz; // somewhat limited resolution ;)
@@ -203,7 +223,7 @@ void beacon_tone(int16_t hz, int16_t len)
   }
 }
 
-void beacon_send(void)
+void beaconSend(void)
 {
   Green_LED_ON
   ItStatus1 = spiReadRegister(0x03);   // read status, clear interrupt
