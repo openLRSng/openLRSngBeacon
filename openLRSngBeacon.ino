@@ -231,7 +231,7 @@ void beacon_send(void)
   spiWriteRegister(0x73, 0x00);
   spiWriteRegister(0x74, 0x00);    // no offset
 
-  rfmSetCarrierFrequency(bind_data.beacon_frequency);
+  rfmSetCarrierFrequency(BEACON_FREQUENCY);
 
   spiWriteRegister(0x6d, 0x07);   // 7 set max power 100mW
 
@@ -317,7 +317,7 @@ void loop(void)
     Red_LED_ON;
     beaconSend();
     Red_LED_OFF;
-    beaconDelay = BEACON_INRERVAL;
+    beaconDelay = BEACON_INTERVAL;
   } else {
     if (beaconDelay != BEACON_DEADTIME) {
       if (ledState) {
