@@ -1,10 +1,12 @@
 // **********************************************************
 // ************************ openLRSngBeacon *****************
 // **********************************************************
-// ** by Kari Hautio - kha @ AeroQuad/RCGroups/IRC(Freenode)
+// ** by Kari Hautio - kha @ AeroQuad/RCGroups/IRC(Freenode)/FPVLAB etc.
 //
 // Lost plane finder beacon using openLRS RX module
 //
+// Donations for development tools and utilities (beer) here
+// https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DSWGKGKPRX5CS
 
 // 3 = OpenLRS Rx v2 Board or OrangeRx UHF RX
 #define BOARD_TYPE 3
@@ -20,6 +22,8 @@
 #define BEACON_DEADTIME 30 // time to wait until go into beacon mode (s)
 #define BEACON_INTERVAL 10 // interval between beacon transmits (s)
 
+// Servovalues considered 'good' i.e. beacon will not activate when it is fed
+// with PWM within these limits (feed via ch4 connector)
 #define MINPWM 1000
 #define MAXPWM 1500
 
