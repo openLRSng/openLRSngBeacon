@@ -22,6 +22,30 @@
 #define BEACON_DEADTIME 30 // time to wait until go into beacon mode (s)
 #define BEACON_INTERVAL 10 // interval between beacon transmits (s)
 
+
+// power levels with RFM22B
+// 7 - 100mW
+// 6 - 50mW
+// 5 - 25mW
+// 4 - 13mW
+// 3 - 6mW
+// 2 - 3mW
+// 1 - 1.6mW
+// 0 - 1.3mW
+
+
+#if 1
+// 100/15/1mW better range
+#define BEACON_POWER_HI  0x07  // 100mW
+#define BEACON_POWER_MED 0x04  // 13mW
+#define BEACON_POWER_LOW 0x00  // 1.3mW
+#else
+// 25/6/1.3mW mostly legal
+#define BEACON_POWER_HI  0x05  // 25mW
+#define BEACON_POWER_MED 0x03  // 6mW
+#define BEACON_POWER_LOW 0x00  // 1.1mW
+#endif
+
 // Servovalues considered 'good' i.e. beacon will not activate when it is fed
 // with PWM within these limits (feed via ch4 connector)
 #define MINPWM 1000
@@ -257,18 +281,18 @@ void beaconSend(void)
 
   rfmSetCarrierFrequency(BEACON_FREQUENCY);
 
-  spiWriteRegister(0x6d, 0x07);   // 7 set max power 100mW
+  spiWriteRegister(0x6d, BEACON_POWER_HI);
 
   delay(10);
   spiWriteRegister(0x07, RF22B_PWRSTATE_TX);    // to tx mode
   delay(10);
   beacon_tone(500, 1);
 
-  spiWriteRegister(0x6d, 0x04);   // 4 set mid power 15mW
+  spiWriteRegister(0x6d, BEACON_POWER_MED);
   delay(10);
   beacon_tone(250, 1);
 
-  spiWriteRegister(0x6d, 0x00);   // 0 set min power 1mW
+  spiWriteRegister(0x6d, BEACON_POWER_LOW);
   delay(10);
   beacon_tone(160, 1);
 
