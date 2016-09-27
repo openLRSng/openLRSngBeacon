@@ -19,9 +19,11 @@
 #define US_FRS_CH(x) (462537500L + 25000L * (x)) // valid for ch 1 - 7
 
 #define BEACON_FREQUENCY EU_PMR_CH(1)
-#define BEACON_DEADTIME 30 // time to wait until go into beacon mode (s)
+
+#define BEACON_DEADTIME 30 // time to wait until going into beacon mode (s)
 #define BEACON_INTERVAL 10 // interval between beacon transmits (s)
 
+#define FULL_POWER_MODE 0  // Set to 1 for 100mW operation, need HAM license
 
 // power levels with RFM22B
 // 7 - 100mW
@@ -34,7 +36,7 @@
 // 0 - 1.3mW
 
 
-#if 1
+#if (FULL_POWER_MODE == 1)
 // 100/15/1mW better range
 #define BEACON_POWER_HI  0x07  // 100mW
 #define BEACON_POWER_MED 0x04  // 13mW
@@ -296,7 +298,7 @@ void beaconSend(void)
   delay(10);
   beacon_tone(160, 1);
 
-  spiWriteRegister(0x07, RF22B_PWRSTATE_READY);
+  spiWriteRegister(0x07, RF22B_PWRSTATE_POWERDOWN);
   Green_LED_OFF
 }
 
@@ -356,28 +358,19 @@ void setup(void)
   sei();
 
   beaconDelay = BEACON_DEADTIME;
-  Green_LED_ON;
 }
 
 void loop(void)
 {
-  static uint8_t ledState;
   if (0 == beaconDelay) {
     Red_LED_ON;
     beaconSend();
     Red_LED_OFF;
     beaconDelay = BEACON_INTERVAL;
   } else {
-    if (beaconDelay != BEACON_DEADTIME) {
-      if (ledState) {
-        Green_LED_ON;
-      } else {
-        Green_LED_OFF;
-      }
-      ledState = !ledState;
-    } else {
-      Green_LED_ON;
-    }
+    Green_LED_ON;
+    delay(2);
+    Green_LED_OFF;
     beaconDelay--;
   }
   delay(1000);
